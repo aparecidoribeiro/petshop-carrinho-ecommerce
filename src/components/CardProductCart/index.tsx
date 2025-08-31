@@ -1,33 +1,48 @@
-import { useContext } from "react";
-import type { CardProductProps } from "../CardProduct";
-import { CartContext, type CartProps } from "../../contexts/CartContext";
 
+import { useContext } from "react";
+import { CartContext, type CartProps } from "../../contexts/CartContext";
+import { Link } from "react-router";
 
 
 interface CardProductCartProps {
-    item: CartProps
+    item: CartProps,
 }
 
 export function CardProductCart({ item }: CardProductCartProps) {
 
+
+    const { addItemCart, removeItemCart } = useContext(CartContext)
+
     return (
-        <section className="flex items-center justify-between border rounded-md p-2 border-blue-400">
-            <img
-                className="w-28"
-                src={item.cover}
-                alt={item.title}
-            />
+        <section className="flex items-center flex-col gap-2 justify-between border rounded-md py-2 px-3 border-blue-400 md:flex-row">
+            <Link to={`/product/${item.id}`}>
+                <img
+                    className="w-28"
+                    src={item.cover}
+                    alt={item.title}
+                />
+            </Link>
             <strong>Preço: {item.price.toLocaleString('pt-BR', {
                 style: "currency",
                 currency: "BRL"
             })}</strong>
 
-            <div className="flex gap-3">
-                <button className="bg-blue-400 cursor-pointer text-white font-bold px-1 w-5 rounded flex items-center justify-center">+</button>
+            <div className="flex items-center justify-center gap-3">
+                <button
+                    onClick={() => removeItemCart(item)}
+                    className="bg-blue-400 cursor-pointer text-white font-bold px-2 rounded flex items-center justify-center">-</button>
                 {item.amount}
-                <button className="bg-blue-400 cursor-pointer text-white font-bold px-1 w-5 rounded flex items-center justify-center">-</button>
+                <button
+                    onClick={() => addItemCart(item)}
+                    className="bg-blue-400 cursor-pointer text-white font-bold px-2 rounded flex items-center justify-center">+</button>
             </div>
+            <strong className="float-right" >
+                SubTotal: {item.total.toLocaleString('pt-BR', {
+                    style: "currency",
+                    currency: "BRL"
+                })}
+            </strong>
 
-        </section>
+        </section >
     )
 }

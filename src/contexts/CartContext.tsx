@@ -4,16 +4,19 @@ import type { ProductsProps } from "../pages/Home";
 interface CartContextProps {
     cart: CartProps[],
     cartAmount: number,
-    addItemCart: (newItem: ProductsProps) => void
+    total: string,
+    addItemCart: (newItem: ProductsProps) => void,
+    removeItemCart: (product: CartProps) => void
 }
 
-interface CartProviderProps {
-    children: ReactNode
-}
 
 export interface CartProps extends ProductsProps {
     amount: number,
     total: number
+}
+
+interface CartProviderProps {
+    children: ReactNode
 }
 
 export const CartContext = createContext({} as CartContextProps)
@@ -21,6 +24,8 @@ export const CartContext = createContext({} as CartContextProps)
 function CartProvider({ children }: CartProviderProps) {
 
     const [cart, setCart] = useState<CartProps[]>([])
+    const [total, setTotal] = useState("")
+
 
     function addItemCart(newItem: ProductsProps) {
 
@@ -34,7 +39,8 @@ function CartProvider({ children }: CartProviderProps) {
             cartList[findIndex].amount = cartList[findIndex].amount + 1
             cartList[findIndex].total = cartList[findIndex].amount * cartList[findIndex].price
 
-            setCart(cart)
+            setCart(cartList)
+            totalCart(cartList)
 
         }
         else {
@@ -46,8 +52,44 @@ function CartProvider({ children }: CartProviderProps) {
             }
 
             setCart(products => [...products, data])
+            totalCart([...cart, data])
 
         }
+    }
+
+    function removeItemCart(product: CartProps) {
+
+        const findIndex = cart.findIndex(item => item.id === product.id)
+
+        if (cart[findIndex].amount > 1) {
+
+            let cartList = cart
+
+            cartList[findIndex].amount = cartList[findIndex].amount - 1
+            cartList[findIndex].total = cartList[findIndex].amount * cartList[findIndex].price
+
+            setCart(cartList)
+            totalCart(cartList)
+        }
+        else {
+            const removeItem = cart.filter(item => item.id !== product.id)
+
+            setCart(removeItem)
+            totalCart(removeItem)
+        }
+
+    }
+
+    function totalCart(itens: CartProps[]) {
+
+        let myCart = itens
+
+        let result = myCart.reduce((acc, obj) => { return acc + obj.total }, 0)
+        let formatResult = result.toLocaleString('pt-BR', {
+            style: 'currency',
+            currency: 'BRL'
+        })
+        setTotal(formatResult)
 
     }
 
@@ -55,8 +97,10 @@ function CartProvider({ children }: CartProviderProps) {
         <CartContext.Provider
             value={{
                 cart,
-                cartAmount: cart?.length,
-                addItemCart
+                cartAmount: cart.length,
+                total,
+                addItemCart,
+                removeItemCart
             }}
         >
             {children}

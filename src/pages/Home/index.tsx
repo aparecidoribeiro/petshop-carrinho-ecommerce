@@ -27,7 +27,7 @@ export const Home = () => {
 
     return (
         <main className="w-full max-w-7xl min-h-screen px-8 flex flex-col items-center mx-auto pb-10">
-            <h1 className="mt-10 font-bold text-2xl">Produtos disponíveis</h1>
+            <h1 className="mt-10 font-bold text-2xl text-center">Produtos disponíveis</h1>
             <div className="w-full mt-10 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
                 {
                     products?.map(product => (

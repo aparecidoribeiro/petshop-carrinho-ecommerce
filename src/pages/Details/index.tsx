@@ -1,16 +1,20 @@
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { useParams } from "react-router"
 import { api } from "../../services/api"
 import type { ProductsProps } from "../Home"
+import { CartContext } from "../../contexts/CartContext"
+import toast from "react-hot-toast"
 
 
 export const Details = () => {
 
 
+    const { addItemCart } = useContext(CartContext)
     const [product, setProduct] = useState<ProductsProps>()
     const [loading, setLoading] = useState(true)
 
     const { id } = useParams()
+
 
     useEffect(() => {
         async function getProduct() {
@@ -34,6 +38,20 @@ export const Details = () => {
         }
     }
 
+    function handleAddCart(item: ProductsProps) {
+        toast.success(
+            "Produto adicionado ao carrinho", {
+            style: {
+                borderRadius: 10,
+                backgroundColor: "#000",
+                color: "#fff"
+            }
+        }
+        )
+        addItemCart(item)
+    }
+
+
     return (
         <main className="w-full max-w-7xl px-8 flex flex-col items-center mx-auto pt-10">
             <div className="flex flex-col items-center justify-center max-w-5xl md:flex-row">
@@ -52,6 +70,7 @@ export const Details = () => {
                         currency: "BRL"
                     })}</p>
                     <button
+                        onClick={() => handleAddCart(product!)}
                         className="bg-blue-400 text-white w-full p-2 rounded cursor-pointer mt-3 hover:bg-blue-500 transition-colors"
                     >
                         Adicionar ao carrinho

@@ -6,10 +6,10 @@ import { CardProductCart } from "../../components/CardProductCart"
 
 export const Cart = () => {
 
-    const { cart } = useContext(CartContext)
+    const { cart, total } = useContext(CartContext)
 
     return (
-        <main className="w-full max-w-7xl mx-auto px-5">
+        <main className="w-full max-w-7xl mx-auto px-5 pb-10">
             <h1 className="font-medium text-2xl mt-10 text-center mb-10">Produtos no carrinho</h1>
             {cart.length === 0 && (
                 <div className='flex flex-col items-center justify-center mt-10'>
@@ -20,7 +20,7 @@ export const Cart = () => {
                 </div>
             )}
 
-            <div className="w-full flex flex-col gap-3">
+            <div className="w-full flex flex-col gap-3 mb-4">
                 {cart.map(item => (
                     <CardProductCart
                         key={item.id}
@@ -28,6 +28,7 @@ export const Cart = () => {
                     />
                 ))}
             </div>
+            {cart.length > 0 && <strong>Total: {total}</strong>}
         </main>
     )
 }

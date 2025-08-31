@@ -2,6 +2,7 @@ import { Link } from "react-router"
 import type { ProductsProps } from "../../pages/Home"
 import { useContext } from "react"
 import { CartContext } from "../../contexts/CartContext"
+import toast from "react-hot-toast"
 
 
 export type CardProductProps = {
@@ -11,6 +12,19 @@ export type CardProductProps = {
 export const CardProduct = ({ item }: CardProductProps) => {
 
     const { addItemCart } = useContext(CartContext)
+
+    function handleAddCart(item: ProductsProps) {
+        toast.success(
+            "Produto adicionado ao carrinho", {
+            style: {
+                borderRadius: 10,
+                backgroundColor: "#000",
+                color: "#fff"
+            }
+        }
+        )
+        addItemCart(item)
+    }
 
     return (
         <section className="border rounded-md p-3 border-blue-400 ">
@@ -34,7 +48,7 @@ export const CardProduct = ({ item }: CardProductProps) => {
                 </p>
                 <button
                     className="bg-blue-400 text-white w-full p-2 rounded cursor-pointer mt-2 hover:bg-blue-500 transition-colors"
-                    onClick={() => addItemCart(item)}
+                    onClick={() => handleAddCart(item)}
                 >
                     Adicionar ao carrinho
                 </button>
